@@ -1,0 +1,35 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Large Model Weights & Checkpoints (Download via huggingface/torch)
+checkpoints/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+
+# Large 3D Point Clouds (>100MB exceeds GitHub limits)
+output/models/*.ply
+output/models/test_*
+
+# Temporary Camera Frames
+output/frames/*
+!output/frames/.gitkeep
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
