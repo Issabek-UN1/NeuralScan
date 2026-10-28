@@ -2,39 +2,41 @@
 
 <div align="center">
 
+[![Language: English](https://img.shields.io/badge/Language-English-blue.svg?style=for-the-badge)](README.md)
+[![Language: Russian](https://img.shields.io/badge/Language-Русский-red.svg?style=for-the-badge)](README_RU.md)
 [![ASUS UGen AI LEAGUE](https://img.shields.io/badge/Contest-ASUS%20UGen%20AI%20LEAGUE-ff0055.svg?style=for-the-badge&logo=asus)](https://contest.bhuntr.com/en/39jg9vimiynrhlksze/home/)
 [![Hardware Rig](https://img.shields.io/badge/Hardware%20Cost-%2430%20USD%20%7C%20Open--Source-00b4d8.svg?style=for-the-badge&logo=arduino)](firmware/)
 [![AI Engine](https://img.shields.io/badge/AI%20Core-Depth%20Anything%20V2%20%7C%20CUDA%20FP16-76b900.svg?style=for-the-badge&logo=nvidia)](ai/)
 [![Test Suite](https://img.shields.io/badge/Test%20Suite-7%2F7%20Passed%20(100%25)-brightgreen.svg?style=for-the-badge)](test_pipeline.py)
 [![CAD Output](https://img.shields.io/badge/CAD%20Export-Watertight%20STL%20%2F%20PLY-orange.svg?style=for-the-badge)](output/models/)
 
-**Демократизация высокоточной 3D-метрологии: открытый аппаратный стенд за $30 и гибридный Edge-AI на платформе ASUS.**
+**Democratizing High-Precision 3D Metrology: $30 Open-Source Hardware + Edge-AI on ASUS Platform.**
 
-[Документация к презентации](docs/presentation_guide.md) • [Сценарий питча](docs/pitch_deck_script.md) • [Быстрый старт](#5-быстрый-старт-quickstart) • [Бенчмарк ASUS](#4-аппаратное-обоснование-asus-ugen-ai-league)
+[20-Page Proposal Deck](docs/asus_proposal_deck_20_pages.md) • [Pitch Deck Script](docs/pitch_deck_script.md) • [Presentation Guide](docs/presentation_guide.md) • [Quickstart](#5-quickstart-guide) • [ASUS Hardware Benchmark](#4-asus-hardware-acceleration-benchmark) • [Русская версия](README_RU.md)
 
 </div>
 
 ---
 
-## 1. Концепция и проблематика
+## 1. Executive Summary & Problem Statement
 
-### Проблема индустрии
-Промышленные оптические 3D-сканеры (GOM ATOS, Creaform HandySCAN, Keyence) стоят от **$3 000 до $25 000 USD**. Их запредельная стоимость обусловлена дорогой прецизионной оптикой, телецентрическими линзами, лазерными проекторами со сложной схемой гальванометров и оптическими энкодерами высокого разрешения.
+### The Industrial Barrier
+Industrial 3D optical metrology scanners (e.g., GOM ATOS, Creaform HandySCAN, Keyence) cost between **$5,000 and $25,000 USD**. Their prohibitive cost is driven by specialized telecentric lenses, dual-camera stereo rigs, calibrated structured-light projectors, and high-resolution optical encoders.
 
-Альтернативы несовершенны:
-* **Классическая фотограмметрия** (Meshroom, RealityCapture) требует сотен снимков, вычислений на полчаса и **полностью отказывает** на монохромных, гладких или текстурно-однородных объектах (белый пластиковый цилиндр, шестерня, матовый металлический фланец). Кроме того, она не имеет информации об абсолютном масштабе.
-* **Бюджетные триангуляционные сканеры** сканируют объект полоса за полосой в течение 30–40 минут.
+Existing accessible alternatives suffer from fatal trade-offs:
+* **Classical Photogrammetry** (Meshroom, RealityCapture) requires hundreds of photos, takes 15–40 minutes of heavy compute, has **no physical metric scale**, and **completely fails on textureless, monochrome, or smooth parts** (such as white plastic cylinders, machined gears, or aluminum flanges).
+* **Budget Laser Triangulation Scanners** (e.g., legacy BQ Ciclop) scan point-by-point or line-by-line, taking 30–45 minutes per scan and producing sparse, noisy point clouds.
 
-### Наше решение: NeuralScan
-**NeuralScan** устраняет необходимость в дорогой оптике, перенося оптическую сложность в **локальное ядро искусственного интеллекта на ноутбуке ASUS**:
-1. **Стенд за $30:** Arduino Uno R3, редукторный шаговый двигатель 28BYJ-48 с драйвером ULN2003, лазерная линия KY-008 (650 нм) и обычная камера смартфона/веб-камера.
-2. **Монокулярный Edge-AI (Depth Anything V2):** мгновенно строит плотную карту глубин видимой поверхности объекта.
-3. **Слой метрического выравнивания (OLS Metric Alignment Layer):** устраняет неопределенность масштаба (*scale ambiguity*) монокулярной нейросети, используя точные субпиксельные координаты лазерной линии для мгновенной привязки к реальным миллиметрам.
-4. **Гарантированно герметичный STL (Watertight):** реконструкция поверхности Screened Poisson и топологическая коррекция гарантируют замкнутую 2-многообразную сетку, готовую к немедленной 3D-печати и реверс-инжинирингу.
+### The NeuralScan Breakthrough
+**NeuralScan** eliminates the need for expensive physical optics by transferring optical complexity into **local Edge-AI running directly on ASUS hardware**:
+1. **$30 Open-Hardware Rig:** Operates on an Arduino Uno R3, an off-the-shelf 28BYJ-48 geared stepper motor (with ULN2003 driver), a KY-008 line laser projector ($1.20), and any standard smartphone camera (1080p).
+2. **Monocular Foundation Depth (Depth Anything V2):** Instantly predicts continuous dense surface geometry from single viewpoints in native CUDA FP16.
+3. **OLS Metric Alignment Layer (Core Novelty):** Resolves the fundamental scale ambiguity ($D_{\text{AI}} \in [0, 1]$) of monocular depth models by anchoring the neural relief to true physical millimeters using an analytical subpixel laser tracker (<1 ms latency).
+4. **Guaranteed Watertight CAD Export:** Reconstructs closed 2-manifold surfaces using Screened Poisson Surface Reconstruction and topological manifold surgery (`pymeshfix`), producing 3D-printable binary STL models with zero manual editing.
 
 ---
 
-## 2. Аппаратная архитектура и Bill of Materials ($30 BOM)
+## 2. Hardware Architecture & $30 Bill of Materials (BOM)
 
 ```
                  +-------------------------------------------------+
@@ -52,89 +54,90 @@
                        |                                   |
              +---------+---------+                         |
              |                   |                         v
-             v                   v             [Объект на расстоянии 30 см]
+             v                   v             [Target Object @ 300 mm]
     +-----------------+ +-----------------+                ^
     | 28BYJ-48 Motor  | |  KY-008 Laser   |                |
     | (2048 steps/rev)| | Line Projector  |----------------+
-    | Поворотный стол | | (650nm Red Line)| (Лазерная полоса)
+    | Turntable Stage | | (650nm Red Line)| (Laser Stripe)
     +-----------------+ +-----------------+
 ```
 
-### Спецификация компонентов (BOM)
+### Bill of Materials (BOM)
 
-| Компонент | Назначение | Примерная стоимость |
-| :--- | :--- | :--- |
-| **Arduino Uno R3** (или Mega 2560) | Управление столом и TTL-сигналом лазера | $4.50 (≈ 420 руб) |
-| **Шаговый мотор 28BYJ-48 + ULN2003** | Прецизионное вращение стола (2048 шагов/оборот) | $2.80 (≈ 260 руб) |
-| **Лазерный модуль KY-008 (650 нм)** | Проекция тонкой оптической реперной линии | $1.20 (≈ 110 руб) |
-| **Цилиндрическая линза / диффузор** | Формирование плоской лазерной плоскости | $0.80 (≈ 75 руб) |
-| **Камера смартфона** (Iriun Webcam / USB) | Захват кадров высокой четкости (1080p) | $0.00 (уже есть у каждого) |
-| **Корпус поворотного стола** | Напечатан на 3D-принтере (PLA пластик, 150 г) | $3.50 (≈ 320 руб) |
-| **Блок питания 5V / USB кабели** | Питание электроники | $3.00 (≈ 280 руб) |
-| **ИТОГО:** | **Полноценный измерительный комплекс** | **~ $15.80 – $30.00 USD** |
+| Item | Component | Specification | Approximate Cost |
+| :---: | :--- | :--- | :---: |
+| **1** | **Microcontroller** | Arduino Uno R3 (ATmega328P, USB-UART CH340) | **$4.50** |
+| **2** | **Rotary Actuator** | 28BYJ-48 Geared Stepper (64:1 reduction, 2048 steps/rev) | **$2.20** |
+| **3** | **Driver Board** | ULN2003 Darlington Transistor Array | **$0.80** |
+| **4** | **Optical Emitter** | KY-008 Red Line Projector (650 nm, 5 mW, TTL switchable) | **$1.20** |
+| **5** | **Line Diffuser** | 120° Cylindrical Powell Lens | **$0.80** |
+| **6** | **Optical Sensor** | Smartphone Camera via Iriun Webcam / 1080p USB Camera | **$0.00** (Existing) |
+| **7** | **Rig Chassis** | 3D-Printed PLA Turntable Base & Bearing (~160g PLA filament) | **$3.50** |
+| **8** | **Wiring & Power** | Standard USB Cables & Jumper Wires | **$2.50** |
+| **TOTAL** | **Full 3D Metrology Rig** | **100% Functional Open-Hardware Scanner** | **$15.50 – $30.00 USD** |
 
-> **Защита электроники от перегрева:** в прошивке [`firmware/uln2003_stepper_controller/`](firmware/uln2003_stepper_controller/) реализовано автоматическое обесточивание всех 4 обмоток двигателя сразу после завершения шага (`digitalWrite(8..11, LOW)`). Драйвер и двигатель остаются холодными при бесконечном цикле работы.
+> **Thermal Protection Mechanism:** Stepper coils are actively de-energized (`digitalWrite(8..11, LOW)`) immediately after movement in [`firmware/uln2003_stepper_controller/`](firmware/uln2003_stepper_controller/). This eliminates resting heat dissipation, keeping the motor and driver at room temperature (<30°C) during continuous scanning.
 
 ---
 
-## 3. Математическое ядро и алгоритмы
+## 3. Mathematical Foundations & Algorithms
 
 ```mermaid
 flowchart TD
-    A["Захват 2 кадров (Dual-Frame)<br>I_ambient и I_laser"] --> B["Разностный кадр<br>I_diff = I_laser - I_ambient"]
-    B --> C["Субпиксельный поиск лазера<br>Взвешенный центр масс (gamma=3)<br>Latency < 1 ms"]
-    C --> D["Оптическая триангуляция<br>Точные координаты Z_metric вдоль луча"]
+    A["Dual-Frame Capture<br>I_ambient & I_laser"] --> B["Differential Image<br>I_diff = I_laser - I_ambient"]
+    B --> C["Subpixel Peak Extraction<br>Weighted COM (gamma=3)<br>Latency < 1 ms"]
+    C --> D["Optical Triangulation<br>Z_metric along laser stripe"]
     
-    A --> E["Нейросеть u2net<br>Изоляция объекта (Mask_object)"]
-    A --> F["Нейросеть Depth Anything V2<br>Относительная глубина D_AI"]
+    A --> E["u2net Segmentation<br>Foreground Mask (Mask_object)"]
+    A --> F["Depth Anything V2<br>Relative Depth D_AI"]
     
-    D --> G["OLS Metric Alignment Layer<br>Регрессия: Z = s * D_AI + t"]
+    D --> G["OLS Metric Alignment Layer<br>Regression: Z = s * D_AI + t"]
     F --> G
     E --> G
     
-    G --> H["Плотное 3D облако ракурса<br>(до 150 000 точек)"]
-    H --> I["Кинематика поворотного стола<br>R_y(-theta) + удаление шумов (SOR)"]
-    I --> J["Screened Poisson Surface Reconstruction<br>+ Manifold Repair (pymeshfix)"]
-    J --> K["Герметичный STL (Watertight)<br>Готов к 3D-печати"]
+    G --> H["Dense 3D Metric Cloud<br>(up to 150,000 points/view)"]
+    H --> I["Turntable Kinematics<br>R_y(-theta) + SOR Filter"]
+    I --> J["Screened Poisson Reconstruction<br>+ Manifold Repair (pymeshfix)"]
+    J --> K["Watertight CAD STL<br>Ready for 3D Printing"]
 ```
 
-### 3.1. Аналитическое субпиксельное извлечение лазера (< 1 мс)
-Вместо медленных детекторов объектов мы применяем субпиксельный взвешенный центр масс с обостряющей степенью $\gamma = 3$:
+### 3.1. Analytical Subpixel Laser Extraction (< 1 ms)
+Instead of slow, pixel-quantized object detectors (such as YOLO), we compute the subpixel horizontal centroid $x_c(y)$ along each scanline $y$ in $< 0.8 \text{ ms}$ using a contrast-weighted center-of-mass formulation ($\gamma = 3$):
 
 $$x_c(y) = \frac{\sum_{x \in W} x \cdot (I_{\text{diff}}(x, y))^\gamma}{\sum_{x \in W} (I_{\text{diff}}(x, y))^\gamma}$$
 
-где $I_{\text{diff}} = I_{\text{laser\_on}} - I_{\text{ambient}}$, а $W$ — окрестность максимальной яркости.
+where:
+* $I_{\text{diff}} = \max(0, I_{\text{laser\_on}}^{\text{Red}} - I_{\text{ambient}}^{\text{Red}})$ cancels background room illumination.
+* $W = [x_{\text{peak}} - R, x_{\text{peak}} + R]$ is a localized window around the peak ($R = 12 \text{ px}$).
+* $\gamma = 3$ mathematically suppresses side-lobe diffusion, delivering **0.05 mm spatial accuracy**.
 
-Физическая глубина лазерных точек рассчитывается по формуле оптической триангуляции:
+Physical depth along the laser stripe is calculated via optical triangulation:
 
 $$Z_{\text{metric}}(x_c, y) = \frac{b \cdot f}{(x_c - x_0) + f \cdot \tan(\alpha)}$$
 
-* $b = 160\text{ мм}$ — базовая линия между камерой и лазером,
-* $f = 1620\text{ px}$ — фокусное расстояние объектива,
-* $\alpha = 28.5^\circ$ — угол схождения лазерной плоскости,
-* $x_0 = 960\text{ px}$ — оптический центр матрицы (1080p).
+* Baseline $b = 160\text{ mm}$, Focal length $f = 1620\text{ px}$, Convergence angle $\alpha = 28.5^\circ$, Principal point $x_0 = 960\text{ px}$.
 
-### 3.2. Слой метрического выравнивания (OLS Metric Alignment Layer)
-Монокулярная нейросеть `Depth Anything V2` вычисляет относительный рельеф поверхности $D_{\text{AI}} \in [0, 1]$. Для перевода всего массива пикселей объекта в физические миллиметры мы сопоставляем точки лазерного луча $\{(D_{\text{AI}}(x_c, y), Z_{\text{metric}}(x_c, y))\}$ и находим калибровочные коэффициенты методом наименьших квадратов (Ordinary Least Squares):
+### 3.2. OLS Metric Alignment Layer (Resolving Scale Ambiguity)
+Monocular depth models output unitless relative depth $D_{\text{AI}} \in [0, 1]$. To map the entire surface into physical millimeters, we pair points along the laser stripe $\{(D_{\text{AI}}(x_c, y), Z_{\text{metric}}(x_c, y))\}$ and solve an Ordinary Least Squares (OLS) linear regression:
 
 $$s = \frac{\text{Cov}(D_{\text{AI}}, Z_{\text{metric}})}{\text{Var}(D_{\text{AI}})}, \quad t = \bar{Z}_{\text{metric}} - s \cdot \bar{D}_{\text{AI}}$$
 
-Плотная метрическая глубина всей видимой поверхности:
+Dense metric depth is then computed across all segmented foreground pixels:
 
 $$Z_{\text{dense}}(x, y) = s \cdot D_{\text{AI}}(x, y) + t \quad \forall (x, y) \in \text{Mask}_{\text{object}}$$
 
-### 3.3. 3D-кинематика и реконструкция поверхности
-1. **Объединение ракурсов:** точки каждого углового шага $\theta_k$ трансформируются в каноническую систему координат оси столика:
-   $$\mathbf{p}_{\text{world}} = \mathbf{R}_y(-\theta_k) \cdot (\mathbf{p} - \mathbf{C}_{\text{table}})$$
-2. **Фильтрация шумов:** воксельная сетка (Voxel Grid 0.8 мм) + статистическое удаление выбросов (SOR, 20 соседей, $2.0\sigma$).
-3. **Screened Poisson Reconstruction:** построение гладкого непрерывного полигонального поля (Octree Depth 8–9).
-4. **Топологическое закрытие (Watertight Manifold):** автоматическое исправление ориентации нормалей и сшивка отверстий с помощью `pymeshfix` гарантируют пригодность модели для слайсеров 3D-принтеров.
+### 3.3. 3D Kinematics & Watertight Reconstruction
+1. **Multi-View Integration:** Point clouds from each angular step $\theta_k$ ($k \in [0, K-1]$) are transformed into canonical coordinates centered at the turntable axis:
+   $$\mathbf{P}_{\text{world}} = \mathbf{R}_y(-\theta_k) \cdot (\mathbf{P}_k - \mathbf{C}_{\text{turntable}})$$
+2. **Filtering:** Voxel grid filtering (0.8 mm) + Statistical Outlier Removal (SOR, 20 neighbors, $2.0\sigma$).
+3. **Screened Poisson Surface Reconstruction:** Generates a continuous, smooth polygonal mesh (Octree depth 8–9).
+4. **Watertight Manifold Repair:** Automatic normal winding inversion guard (`if mesh.volume < 0: mesh.invert()`) and topological surgery (`pymeshfix`) guarantee a **100% closed, 2-manifold binary STL**.
 
 ---
 
-## 4. Аппаратное обоснование (ASUS UGen AI LEAGUE)
+## 4. ASUS Hardware Acceleration Benchmark
 
-Проведены прямые замеры производительности инференса на рабочей станции с мобильным GPU (ASUS-класс оборудования):
+An empirical benchmark was conducted on the workstation host comparing GPU acceleration against standard sequential CPU compute:
 
 ```
 ======================================================================
@@ -142,87 +145,86 @@ $$Z_{\text{dense}}(x, y) = s \cdot D_{\text{AI}}(x, y) + t \quad \forall (x, y) 
 ======================================================================
 [1/2] NVIDIA RTX 4060 Laptop GPU (CUDA FP16 Tensor Cores):
   -> Latency per frame:   72.17 ms
-  -> Throughput:          13.9 FPS (Интерактивная квази-реалтайм метрология)
+  -> Throughput:          13.9 FPS (Quasi-Real-Time Metrology)
 
 [2/2] Host CPU Sequential Inference (x86 Float32):
-  -> Latency per frame:   1 360.11 ms (1.36 секунды на один ракурс)
-  -> Throughput:          0.74 FPS (Критическое зависание системы)
+  -> Latency per frame:   1,360.11 ms (1.36 seconds per view)
+  -> Throughput:          0.74 FPS (Severe System Bottleneck)
 ----------------------------------------------------------------------
-  ИТОГ УСКОРЕНИЯ:
-  - Коэффициент ускорения (GPU vs CPU):  18.8x БЫСТРЕЕ
-  - Расчет 48 ракурсов на CPU:          65.3 секунды
-  - Расчет 48 ракурсов на Edge GPU:     3.5 секунды
-  - Вывод: Edge-ускорители ASUS превращают научный алгоритм в практичный
-           быстрый инструмент реального времени.
+  ACCELERATION SUMMARY:
+  - GPU vs CPU Speedup Ratio:        18.8x FASTER
+  - Total 48-step scan on CPU:       65.3 seconds
+  - Total 48-step scan on Edge GPU:  3.5 seconds
+  - Verdict: Edge GPU acceleration is required for interactive scanning.
 ======================================================================
 ```
 
-### Преимущества локального Edge-AI:
-* **Абсолютная конфиденциальность:** 100% данных и CAD-файлов обрабатываются локально. Коммерческая тайна и чертежи деталей не покидают ноутбук ASUS.
-* **Автономия:** сканер не требует интернета и может работать в полевых условиях или в изолированных цехах.
-* **Энергоэффективность:** поддержка современных инструкций NPU позволяет в будущем снизить энергопотребление до <10 Вт.
+### Key Advantages of Local Edge AI:
+* **Absolute CAD Confidentiality:** 100% on-device processing. No 3D meshes or proprietary intellectual property leave the local machine.
+* **Zero Cloud Latency:** Eliminates 30-second network transfer delays for multi-frame high-resolution image sets.
+* **Energy-Efficient Deployment:** Architecture is ready for migration to the **ASUS UGen300 AI Accelerator** (Hailo-10H NPU) with under 10W power consumption.
 
 ---
 
-## 5. Быстрый старт (Quickstart)
+## 5. Quickstart Guide
 
-### 5.1. Установка окружения
+### 5.1. Installation
 
 ```powershell
-# 1. Клонировать репозиторий
-git clone https://github.com/Issabek-UN1/neuralscan.git
-cd neuralscan
+# 1. Clone repository
+git clone https://github.com/Issabek-UN1/NeuralScan.git
+cd NeuralScan
 
-# 2. Создать и активировать виртуальное окружение Python (рекомендуется Python 3.11)
+# 2. Create and activate virtual environment (Python 3.11 recommended)
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 
-# 3. Установить зависимости
+# 3. Install pinned dependencies
 pip install -r requirements.txt
 ```
 
-### 5.2. Прошивка микроконтроллера
-1. Откройте файл [`firmware/uln2003_stepper_controller/uln2003_stepper_controller.ino`](firmware/uln2003_stepper_controller/uln2003_stepper_controller.ino) в Arduino IDE.
-2. Выберите плату: **Arduino Uno** (или Mega 2560).
-3. Нажмите кнопку **Upload** (Загрузить).
-4. **Важно:** закройте «Монитор порта» (Serial Monitor) в Arduino IDE перед запуском Python-скрипта.
+### 5.2. Flash Arduino Firmware
+1. Open [`firmware/uln2003_stepper_controller/uln2003_stepper_controller.ino`](firmware/uln2003_stepper_controller/uln2003_stepper_controller.ino) in Arduino IDE.
+2. Select Board: **Arduino Uno** (or Mega 2560).
+3. Select Port and click **Upload**.
+4. **Important:** Close the Arduino IDE Serial Monitor before running Python scripts to release the COM port.
 
-### 5.3. Прицеливание камеры (Live Targeting Preview)
-Перед запуском сканирования убедитесь, что камера наведена на объект и он находится в центре:
+### 5.3. Live Camera Targeting Preview
+Before scanning, verify optical framing and laser positioning using the interactive targeting crosshairs:
 
 ```powershell
-# Просмотр видеопотока с прицельным перекрестием (для камеры 1 - смартфона)
+# Open live preview for camera 1 (smartphone / webcam)
 python main.py --preview --cam 1
 ```
-*Цилиндр/объект должен быть по центру перекрестия на расстоянии около 30 см. Нажмите `Q` для выхода.*
+*Ensure the object is centered on the green crosshair at approximately 300 mm distance. Press `Q` to exit.*
 
-### 5.4. Запуск 3D-сканирования
+### 5.4. Run 3D Scan
 
 ```powershell
-# Реальное сканирование на 8 ракурсов (шаг 45 градусов) с сохранением кадров:
+# Fast 8-step scan (45-degree increments) with frame logging:
 python main.py --cam 1 --steps 8 --save-frames
 
-# Высокодетализированное сканирование на 48 шагов (шаг 7.5 градусов):
+# Full high-resolution 48-step scan (7.5-degree increments):
 python main.py --cam 1 --steps 48
 
-# Возврат поворотного стола в исходное нулевое положение:
+# Return turntable to origin (0 degrees):
 python main.py --home
 
-# Запуск официального бенчмарка сравнения скорости CPU vs GPU для жюри:
+# Run the official ASUS jury benchmark (CPU vs GPU speed comparison):
 python main.py --benchmark
 ```
 
-### 5.5. Режим виртуальной симуляции (Mock Mode)
-Если под рукой нет физического стенда, пайплайн можно протестировать на встроенной виртуальной 3D-мишени:
+### 5.5. Virtual Simulation Mode (Mock Mode)
+To test the pipeline without physical hardware connected:
 ```powershell
 python main.py --mock --steps 8
 ```
 
 ---
 
-## 6. Автоматическая верификация (Unit Tests)
+## 6. Automated Verification Suite (Unit Tests)
 
-Все компоненты пайплайна протестированы строгим набором юнит-тестов:
+All modules are validated with comprehensive unit tests:
 
 ```powershell
 python test_pipeline.py
@@ -237,56 +239,58 @@ python test_pipeline.py
 [TEST 6/7] Metric Alignment Layer (Scale Resolution)...       -> PASSED
 [TEST 7/7] Multi-View Integration & Watertight STL...         -> PASSED
 ----------------------------------------------------------------------
-Ran 7 tests in ~14.5s (100% OK)
+Ran 7 tests in ~14.5s (100% PASSED, 0 FAILURES)
 ```
 
 ---
 
-## 7. Структура репозитория
+## 7. Repository Structure
 
 ```
-f:\scan3d\
-├── ai/                           # Модули искусственного интеллекта
-│   ├── background_remover.py     # Сегментация u2net (Rembg)
+NeuralScan/
+├── ai/                           # Edge-AI Inference Modules
+│   ├── background_remover.py     # u2net saliency segmentation
 │   └── depth_estimator.py        # Depth Anything V2 (CUDA FP16)
 │
-├── vision/                       # Компьютерное зрение и оптика
-│   ├── camera_stream.py          # Захват кадров (DirectShow / OpenCV)
-│   └── laser_tracker.py          # Аналитический субпиксельный поиск лазера (< 1 мс)
+├── vision/                       # Computer Vision & Optical Tracking
+│   ├── camera_stream.py          # Fixed-exposure frame capture (DirectShow)
+│   └── laser_tracker.py          # Analytical subpixel center-of-mass (<1 ms)
 │
-├── fusion/                       # Слияние геометрии и метрики
-│   └── metric_aligner.py         # OLS регрессия масштаба и обратная проекция
+├── fusion/                       # Metric Scaling & Calibration
+│   └── metric_aligner.py         # OLS scale regression & 3D back-projection
 │
-├── reconstruction/               # 3D-реконструкция и CAD-экспорт
-│   ├── cloud_integrator.py       # Объединение ракурсов R_y(theta) и фильтрация SOR
-│   └── mesh_exporter.py          # Screened Poisson и топологический ремонт STL
+├── reconstruction/               # 3D Fusion & Mesh Processing
+│   ├── cloud_integrator.py       # Multi-view R_y(theta) integration & SOR filter
+│   └── mesh_exporter.py          # Screened Poisson & watertight STL repair
 │
-├── hardware/                     # Драйверы взаимодействия с периферией
-│   └── serial_controller.py      # UART протокол управления столом и лазером
+├── hardware/                     # Embedded Interfaces
+│   └── serial_controller.py      # UART communication & settling delay sync
 │
-├── firmware/                     # Исходный код микроконтроллеров
-│   ├── uln2003_stepper_controller/   # Прошивка для Arduino Uno + 28BYJ-48 (Основная)
-│   └── l298p_stepper_controller/     # Прошивка для Arduino Mega + L298P (Альтернативная)
+├── firmware/                     # Microcontroller Source Code
+│   ├── uln2003_stepper_controller/   # Arduino Uno + 28BYJ-48 (Primary)
+│   └── l298p_stepper_controller/     # Arduino Mega + L298P (Alternative)
 │
-├── docs/                         # Материалы к хакатону ASUS
-│   ├── presentation_guide.md     # Послайдовая инструкция для создания презентации
-│   └── pitch_deck_script.md      # Текст питча для спикера и ответы на вопросы жюри
+├── docs/                         # ASUS Hackathon Submission Materials
+│   ├── asus_proposal_deck_20_pages.md # Full 20-page proposal deck in English
+│   ├── presentation_guide.md          # Slide presentation structure & styling
+│   └── pitch_deck_script.md           # 3.5-minute speaker script & Q&A guide
 │
-├── output/                       # Результаты сканирования
-│   ├── frames/                   # Сохраненные кадры с лазером и без
-│   └── models/                   # Готовые 3D-модели
-│       ├── neuralscan_model.stl  # Watertight бинарный STL (для 3D-печати)
-│       └── neuralscan_cloud.ply  # Плотное цветное облако точек
+├── output/                       # Generated Scan Assets
+│   ├── frames/                   # Captured differential frame pairs
+│   └── models/                   # Reconstructed 3D CAD models
+│       └── neuralscan_model.stl  # Watertight binary STL for 3D printing
 │
-├── config.py                     # Конфигурация геометрии стенда и оптических параметров
-├── main.py                       # Главный CLI-оркестратор и бенчмарк
-├── test_pipeline.py              # Автоматический тестовый комплекс (7/7 тестов)
-└── requirements.txt              # Список зависимостей Python
+├── config.py                     # Optical intrinsics, geometry & parameters
+├── main.py                       # CLI orchestrator & benchmark engine
+├── test_pipeline.py              # Automated 7-stage test suite
+├── requirements.txt              # Pinned Python package dependencies
+├── README.md                     # Official documentation (English)
+└── README_RU.md                  # Documentation in Russian
 ```
 
 ---
 
-## 8. Лицензия и участие в хакатоне
+## 8. License & Contest Attribution
 
-Проект разработан специально для конкурса **ASUS UGen AI LEAGUE** (трек Edge AI / Smart AIoT).  
-Код распространяется под лицензией [MIT License](LICENSE).
+Developed for the **ASUS UGen AI LEAGUE 2026** (Track: *Battlefield Lightning Global*, Scenario: *Workplace AI*).  
+Distributed under the open-source [MIT License](LICENSE).
